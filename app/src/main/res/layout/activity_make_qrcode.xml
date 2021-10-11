@@ -21,8 +21,10 @@
 
         <ImageView
             android:id="@+id/generateImageView"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginStart="@dimen/hiad_20_dp"
+            android:layout_marginEnd="@dimen/hiad_20_dp"
             android:contentDescription="@string/todo"
             app:srcCompat="?attr/actionBarDivider" />
 

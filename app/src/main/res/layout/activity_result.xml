@@ -24,58 +24,47 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <ImageView
-                    android:id="@+id/backBtnResult"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="0dp"
-                    android:contentDescription="@string/todo"
-                    android:src="@drawable/back"
-                    app:tint="@color/black" />
+            <ImageView
+                android:id="@+id/backBtnResult"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="0dp"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/back"
+                app:tint="@color/textColor" />
 
 
-                <TextView
-                    android:id="@+id/searchResultTxt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_toEndOf="@+id/backBtnResult"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:text="@string/result"
-                    android:textColor="@color/black"
-                    android:textSize="18sp" />
+            <TextView
+                android:id="@+id/searchResultTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="5dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/result"
+                android:textColor="@color/textColor"
+                android:textSize="18sp" />
 
-
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/viewSearchBar"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="2dp"
-                android:background="@color/red"
-                android:visibility="visible" />
 
         </LinearLayout>
 
-
     </androidx.cardview.widget.CardView>
+
+    <View
+        android:id="@+id/viewSearchBar"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/cardViewResult"
+        android:layout_marginTop="0dp"
+        android:background="@color/red"
+        android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/resultShowBodyLayout"
@@ -84,6 +73,7 @@
         android:layout_below="@+id/cardViewResult"
         android:layout_marginTop="0dp"
         android:gravity="center"
+        android:background="@color/bodyColor"
         android:orientation="vertical">
 
         <TextView
@@ -93,7 +83,8 @@
             android:layout_margin="10dp"
             android:autoLink="web"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="@color/textColor"
+            android:text="fadsjfa"
             android:textSize="22sp" />
 
     </LinearLayout>
