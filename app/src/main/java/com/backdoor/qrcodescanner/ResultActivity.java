@@ -41,17 +41,12 @@ public class ResultActivity extends Activity {
 
         // Obtain BannerView based on the configuration in layout/ad_fragment.xml.
         BannerView bottomBannerView = findViewById(R.id.hw_banner_view);
+        bottomBannerView.setAdId("testw6vs28auh3");
+        bottomBannerView.setBannerAdSize(BannerAdSize.BANNER_SIZE_360_57);
+        bottomBannerView.setBannerRefresh(30);
+
         AdParam adParam = new AdParam.Builder().build();
         bottomBannerView.loadAd(adParam);
-
-        // Call new BannerView(Context context) to create a BannerView class.
-        BannerView topBannerView = new BannerView(this);
-        topBannerView.setAdId("testw6vs28auh3");
-        topBannerView.setBannerAdSize(BannerAdSize.BANNER_SIZE_SMART);
-        topBannerView.loadAd(adParam);
-
-        RelativeLayout rootView = findViewById(R.id.resultViewLayout);
-        rootView.addView(topBannerView);
 
     }
 }
