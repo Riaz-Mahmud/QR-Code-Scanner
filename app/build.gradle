@@ -46,6 +46,8 @@ dependencies {
     implementation 'com.huawei.hms:ads-installreferrer:3.4.39.302'
     implementation 'com.huawei.hms:ads-lite:13.4.39.302'
     implementation 'com.huawei.hms:hianalytics:6.2.0.301'
+
+    implementation 'com.google.zxing:core:3.2.1'
 }
 
 apply plugin: 'com.huawei.agconnect'

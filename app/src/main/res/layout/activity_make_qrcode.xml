@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MakeQRCodeActivity">
+
+    <RelativeLayout
+        android:id="@+id/makeQrRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="0dp"
+        android:gravity="center"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/generateImageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:contentDescription="@string/todo"
+            app:srcCompat="?attr/actionBarDivider" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/makeQrRelativeLayout"
+        android:layout_marginTop="@dimen/hiad_20_dp"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/generateEditTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/hiad_20_dp"
+            android:autofillHints="@string/enter_your_text_here"
+            android:hint="@string/enter_your_text_here"
+            android:inputType="text"
+            android:textSize="@dimen/hiad_text_16_sp"
+            tools:ignore="LabelFor" />
+
+        <Button
+            android:id="@+id/generateBtn"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_margin="@dimen/hiad_20_dp"
+            android:backgroundTint="@color/red"
+            android:text="@string/generate"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

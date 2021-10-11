@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     //scan_view_finder width & height is  300dp
     final int SCAN_FRAME_SIZE = 300;
 
+    private Button makeQrCodeBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
         scanning(savedInstanceState);
         setAd();
+
+        makeQrCodeBtn = findViewById(R.id.makeQrCodeBtn);
+        makeQrCodeBtn.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, MakeQRCodeActivity.class));
+        });
     }
 
     private void scanning(Bundle savedInstanceState) {

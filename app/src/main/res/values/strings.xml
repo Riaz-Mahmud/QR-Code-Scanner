@@ -2,4 +2,7 @@
     <string name="app_name">QR Code Scanner</string>
     <string name="todo">TODO</string>
     <string name="result">Result</string>
+    <string name="enter_your_text_here">Enter Your Text Here</string>
+    <string name="generate">Generate</string>
+    <string name="generate_qr_code">Generate QR Code</string>
 </resources>
