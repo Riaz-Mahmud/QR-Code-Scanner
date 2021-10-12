@@ -5,4 +5,7 @@
     <string name="enter_your_text_here">Enter Your Text Here</string>
     <string name="generate">Generate</string>
     <string name="generate_qr_code">Generate QR Code</string>
+    <string name="scan_image">Scan Image</string>
+    <string name="share">Share</string>
+    <string name="open_image">Open Image</string>
 </resources>

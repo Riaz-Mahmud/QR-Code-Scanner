@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bodyColor"
     tools:context=".MakeQRCodeActivity">
 
     <RelativeLayout
@@ -46,6 +47,7 @@
             android:autofillHints="@string/enter_your_text_here"
             android:hint="@string/enter_your_text_here"
             android:inputType="text"
+            android:textColor="@color/textColor"
             android:textSize="@dimen/hiad_text_16_sp"
             tools:ignore="LabelFor" />
 
@@ -55,6 +57,7 @@
             android:layout_height="55dp"
             android:layout_margin="@dimen/hiad_20_dp"
             android:backgroundTint="@color/red"
+            android:textColor="@color/textColor"
             android:text="@string/generate"
             android:textSize="20sp" />
 

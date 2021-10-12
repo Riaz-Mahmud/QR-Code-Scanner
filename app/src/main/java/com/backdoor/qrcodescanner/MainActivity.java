@@ -1,24 +1,21 @@
 package com.backdoor.qrcodescanner;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.huawei.hianalytics.scankit.HiAnalyticsTools;
 import com.huawei.hms.ads.AdParam;
 import com.huawei.hms.ads.BannerAdSize;
@@ -44,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     //scan_view_finder width & height is  300dp
     final int SCAN_FRAME_SIZE = 300;
 
-    private Button makeQrCodeBtn;
+    private ImageView menu_img;
 
 
     @Override
@@ -53,21 +50,55 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        init();
+
         // Enable SDK log recording.
         HiAnalyticsTools.enableLog();
         HiAnalyticsInstance instance = HiAnalytics.getInstance(this);
         // Or initialize Analytics Kit with the given context.
         Context context = this.getApplicationContext();
         HiAnalyticsInstance analyticsInstance = HiAnalytics.getInstance(context);
-        analyticsInstance.setUserProfile("notify_user","notify_user_value");
+        analyticsInstance.setUserProfile("notify_user", "notify_user_value");
 
         scanning(savedInstanceState);
         setAd();
 
-        makeQrCodeBtn = findViewById(R.id.makeQrCodeBtn);
-        makeQrCodeBtn.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, MakeQRCodeActivity.class));
+    }
+
+    private void init() {
+        menu_img = findViewById(R.id.menu_img);
+
+        menu_img.setOnClickListener(v -> showBottomMenu());
+
+    }
+
+    private void showBottomMenu() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(MainActivity.this, R.style.bottomSheetDialogTheme);
+        bottomSheetDialog.setContentView(R.layout.item_bottom_menu);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+
+        Button makeQrCodeBtn = bottomSheetDialog.findViewById(R.id.makeQrCodeBtnMenu);
+        Button scanFormImage = bottomSheetDialog.findViewById(R.id.scanFromImageBtnMenu);
+        Button shareBtn = bottomSheetDialog.findViewById(R.id.shareBtnMenu);
+
+        assert makeQrCodeBtn != null;
+        makeQrCodeBtn.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, MakeQRCodeActivity.class)));
+
+        assert scanFormImage != null;
+        scanFormImage.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BitmapActivity.class)));
+
+        assert shareBtn != null;
+        shareBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            String Body = "Download QR Code Scanner App";
+            String Sub = "You can Scan any Bar code & QR code with this" + ". " + ". \nhttps://appgallery.huawei.com/#/app/C104816483";
+            intent.putExtra(Intent.EXTRA_SUBJECT, Body);
+            intent.putExtra(Intent.EXTRA_TEXT, Sub);
+            startActivity(Intent.createChooser(intent, "Share using"));
         });
+
+        bottomSheetDialog.show();
     }
 
     private void scanning(Bundle savedInstanceState) {

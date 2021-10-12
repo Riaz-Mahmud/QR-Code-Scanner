@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bodyColor"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <Button
+        android:id="@+id/openImageBtn"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_margin="@dimen/hiad_20_dp"
+        android:backgroundTint="@color/red"
+        android:text="@string/open_image"
+        android:textColor="@color/white"
+        android:textSize="@dimen/hiad_text_16_sp" />
+
+
+</LinearLayout>
