@@ -12,11 +12,11 @@
         android:id="@+id/openImageBtn"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_margin="@dimen/hiad_20_dp"
-        android:backgroundTint="@color/red"
+        android:layout_margin="20dp"
+        android:background="@color/red"
         android:text="@string/open_image"
         android:textColor="@color/white"
-        android:textSize="@dimen/hiad_text_16_sp" />
+        android:textSize="16sp" />
 
 
 </LinearLayout>

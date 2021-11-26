@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:hwads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- customize layout needed by scankit for camera preview -->
+    <!-- customize layout needed by scanKit for camera preview -->
     <FrameLayout
         android:id="@+id/rim"
         android:layout_width="match_parent"
@@ -33,19 +32,17 @@
         android:layout_height="48dp"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="@dimen/hiad_12_dp"
+        android:layout_marginEnd="12dp"
         android:contentDescription="@string/todo"
         android:gravity="center"
         android:padding="12dp"
         android:src="@drawable/menu" />
-
 
     <!--  customize scanning mask  -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
         android:alpha="0.1"
         android:background="#FF000000"
         android:contentDescription="@string/todo" />
@@ -56,17 +53,19 @@
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_centerInParent="true"
-        android:layout_centerHorizontal="true"
         android:background="@drawable/cloors"
         android:contentDescription="@string/todo" />
 
-    <com.huawei.hms.ads.banner.BannerView
-        android:id="@+id/hw_banner_view"
-        android:layout_width="match_parent"
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        hwads:adId="testw6vs28auh3"
-        hwads:bannerSize="BANNER_SIZE_360_57" />
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
 
+    </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>

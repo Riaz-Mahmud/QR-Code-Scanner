@@ -11,14 +11,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.huawei.hms.ads.AdParam;
-import com.huawei.hms.ads.BannerAdSize;
-import com.huawei.hms.ads.HwAds;
-import com.huawei.hms.ads.banner.BannerView;
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+
 
 public class ResultActivity extends Activity {
 
     private TextView resultTxt;
+
+    private AdView mAdView;
+    int click = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,31 +54,62 @@ public class ResultActivity extends Activity {
 
     private void textCopy(String result) {
 
-        resultTxt.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ClipData clipData = ClipData.newPlainText("text", result);
-                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                clipboardManager.setPrimaryClip(clipData);
+        resultTxt.setOnLongClickListener(v -> {
+            ClipData clipData = ClipData.newPlainText("text", result);
+            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboardManager.setPrimaryClip(clipData);
 
-                Toast.makeText(ResultActivity.this, "Data Copied", Toast.LENGTH_SHORT).show();
-                return true;
-            }
+            Toast.makeText(ResultActivity.this, "Data Copied", Toast.LENGTH_SHORT).show();
+            return true;
         });
     }
 
     private void setAd() {
-        // Initialize the HUAWEI Ads SDK.
-        HwAds.init(this);
+        MobileAds.initialize(this, initializationStatus -> {
+        });
 
-        // Obtain BannerView based on the configuration in layout/ad_fragment.xml.
-        BannerView bottomBannerView = findViewById(R.id.hw_banner_view);
-        bottomBannerView.setAdId("testw6vs28auh3");
-        bottomBannerView.setBannerAdSize(BannerAdSize.BANNER_SIZE_360_57);
-        bottomBannerView.setBannerRefresh(30);
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
-        AdParam adParam = new AdParam.Builder().build();
-        bottomBannerView.loadAd(adParam);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                // Code to be executed when an ad request fails.
+                super.onAdFailedToLoad(adError);
+                mAdView.loadAd(adRequest);
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+                super.onAdOpened();
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+                super.onAdClicked();
+
+                click++;
+                if (click > 3) {
+                    mAdView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
 
     }
 }

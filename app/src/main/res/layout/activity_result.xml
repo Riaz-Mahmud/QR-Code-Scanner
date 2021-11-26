@@ -72,8 +72,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/cardViewResult"
         android:layout_marginTop="0dp"
-        android:gravity="center"
         android:background="@color/bodyColor"
+        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
@@ -81,21 +81,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:autoLink="web"
+            android:autoLink="all"
             android:textAlignment="center"
             android:textColor="@color/textColor"
-            android:text="fadsjfa"
             android:textSize="22sp" />
 
     </LinearLayout>
 
-    <com.huawei.hms.ads.banner.BannerView
-        android:id="@+id/hw_banner_view"
-        android:layout_width="match_parent"
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        hwads:adId="testw6vs28auh3"
-        hwads:bannerSize="BANNER_SIZE_360_57" />
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+
+    </com.google.android.gms.ads.AdView>
+
+
 
 
 </RelativeLayout>

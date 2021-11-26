@@ -3,6 +3,8 @@ package com.backdoor.qrcodescanner;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -13,27 +15,23 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.huawei.hianalytics.scankit.HiAnalyticsTools;
-import com.huawei.hms.ads.AdParam;
-import com.huawei.hms.ads.BannerAdSize;
-import com.huawei.hms.ads.HwAds;
-import com.huawei.hms.ads.banner.BannerView;
-import com.huawei.hms.analytics.HiAnalytics;
-import com.huawei.hms.analytics.HiAnalyticsInstance;
-import com.huawei.hms.hmsscankit.OnResultCallback;
 import com.huawei.hms.hmsscankit.RemoteView;
 import com.huawei.hms.ml.scan.HmsScan;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
-
     //declare RemoteView instance
     private RemoteView remoteView;
-    //declare the key ,used to get the value returned from scankit
+    //declare the key ,used to get the value returned from scanKit
     public static final String SCAN_RESULT = "scanResult";
 
     int mScreenWidth;
@@ -41,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
     //scan_view_finder width & height is  300dp
     final int SCAN_FRAME_SIZE = 300;
 
-    private ImageView menu_img;
-
+    private AdView mAdView;
+    int click = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,24 +50,14 @@ public class MainActivity extends AppCompatActivity {
 
         init();
 
-        // Enable SDK log recording.
-        HiAnalyticsTools.enableLog();
-        HiAnalyticsInstance instance = HiAnalytics.getInstance(this);
-        // Or initialize Analytics Kit with the given context.
-        Context context = this.getApplicationContext();
-        HiAnalyticsInstance analyticsInstance = HiAnalytics.getInstance(context);
-        analyticsInstance.setUserProfile("notify_user", "notify_user_value");
-
         scanning(savedInstanceState);
         setAd();
 
     }
 
     private void init() {
-        menu_img = findViewById(R.id.menu_img);
-
+        ImageView menu_img = findViewById(R.id.menu_img);
         menu_img.setOnClickListener(v -> showBottomMenu());
-
     }
 
     private void showBottomMenu() {
@@ -102,14 +90,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void scanning(Bundle savedInstanceState) {
-        //1.get screen density to caculate viewfinder's rect
+        //1.get screen density to calculate viewfinder's rect
         DisplayMetrics dm = getResources().getDisplayMetrics();
         float density = dm.density;
         //2.get screen size
         mScreenWidth = getResources().getDisplayMetrics().widthPixels;
         mScreenHeight = getResources().getDisplayMetrics().heightPixels;
         int scanFrameSize = (int) (SCAN_FRAME_SIZE * density);
-        //3.caculate viewfinder's rect,it's in the middle of the layout
+        //3.calculate viewfinder's rect,it's in the middle of the layout
         //set scanning area(Optional, rect can be null,If not configure,default is in the center of layout)
         Rect rect = new Rect();
         rect.left = mScreenWidth / 2 - scanFrameSize / 2;
@@ -120,48 +108,89 @@ public class MainActivity extends AppCompatActivity {
         //initialize RemoteView instance, and set calling back for scanning result
         remoteView = new RemoteView.Builder().setContext(this).setBoundingBox(rect).setFormat(HmsScan.ALL_SCAN_TYPE).build();
         remoteView.onCreate(savedInstanceState);
-        remoteView.setOnResultCallback(new OnResultCallback() {
-            @Override
-            public void onResult(HmsScan[] result) {
-                //judge the result is effective
-                if (result != null && result.length > 0 && result[0] != null && !TextUtils.isEmpty(result[0].getOriginalValue())) {
+        remoteView.setOnResultCallback(result -> {
+            //judge the result is effective
+            if (result != null && result.length > 0 && result[0] != null && !TextUtils.isEmpty(result[0].getOriginalValue())) {
 
-                    Intent intent = new Intent(MainActivity.this, ResultActivity.class);
-                    intent.putExtra(SCAN_RESULT, result[0].getOriginalValue());
-                    setResult(RESULT_OK, intent);
-                    startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, ResultActivity.class);
+                intent.putExtra(SCAN_RESULT, result[0].getOriginalValue());
+                setResult(RESULT_OK, intent);
+                startActivity(intent);
 
-                }
             }
         });
 
-        //add remoteView to framelayout
+        //add remoteView to frameLayout
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         FrameLayout frameLayout = findViewById(R.id.rim);
         frameLayout.addView(remoteView, params);
 
         //set back button listener
         ImageView backBtn = findViewById(R.id.back_img);
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.this.finish();
-            }
-        });
+        backBtn.setOnClickListener(v -> MainActivity.this.finish());
     }
 
     private void setAd() {
-        // Initialize the HUAWEI Ads SDK.
-        HwAds.init(this);
 
-        // Obtain BannerView based on the configuration in layout/ad_fragment.xml.
-        BannerView bottomBannerView = findViewById(R.id.hw_banner_view);
-        bottomBannerView.setAdId("testw6vs28auh3");
-        bottomBannerView.setBannerAdSize(BannerAdSize.BANNER_SIZE_360_57);
-        bottomBannerView.setBannerRefresh(30);
+        if (checkConnection()) {
 
-        AdParam adParam = new AdParam.Builder().build();
-        bottomBannerView.loadAd(adParam);
+            MobileAds.initialize(this, initializationStatus -> {
+            });
+
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+
+            mAdView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    // Code to be executed when an ad finishes loading.
+                    super.onAdLoaded();
+                }
+
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                    // Code to be executed when an ad request fails.
+                    super.onAdFailedToLoad(adError);
+                    mAdView.loadAd(adRequest);
+                }
+
+                @Override
+                public void onAdOpened() {
+                    // Code to be executed when an ad opens an overlay that
+                    // covers the screen.
+                    super.onAdOpened();
+                }
+
+                @Override
+                public void onAdClicked() {
+                    // Code to be executed when the user clicks on an ad.
+                    super.onAdClicked();
+
+                    click++;
+                    if (click > 3) {
+                        mAdView.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onAdClosed() {
+                    // Code to be executed when the user is about to return
+                    // to the app after tapping on an ad.
+                }
+            });
+        }
+    }
+
+    public boolean checkConnection() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert manager != null;
+        NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+        if (activeNetwork == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     //manage remoteView lifecycle
