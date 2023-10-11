@@ -1,11 +1,18 @@
 package com.backdoor.qrcodescanner;
 
+import static com.huawei.hms.mlkit.common.ha.BundleKeyConstants.AppInfo.packageName;
+
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -14,9 +21,13 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -41,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AdView mAdView;
     int click = 0;
+    final int PERMISSION_REQUEST_CODE = 112;
+    final int PERMISSION_REQUEST_CODE_CAMERA = 113;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +69,68 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
+
         ImageView menu_img = findViewById(R.id.menu_img);
         menu_img.setOnClickListener(v -> showBottomMenu());
+
+        if (Build.VERSION.SDK_INT > 32) {
+            if (!(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED)) {
+                getNotificationPermission();
+            }
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)) {
+                getCameraPermission();
+            }
+        }
+
+    }
+
+    private void getCameraPermission() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                this.requestPermissions(
+                        new String[]{Manifest.permission.CAMERA},
+                        113);
+            }
+
+        } catch (Exception ignored) {
+        }
+    }
+
+    public void getNotificationPermission() {
+        try {
+            if (Build.VERSION.SDK_INT > 32) {
+                this.requestPermissions(
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        112);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+
+            case PERMISSION_REQUEST_CODE:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // allow
+                } else {
+                    Toast.makeText(this, "Notification permission denied", Toast.LENGTH_LONG).show();
+                }
+            case PERMISSION_REQUEST_CODE_CAMERA:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(this, "camera permission granted", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, "camera permission denied", Toast.LENGTH_LONG).show();
+                }
+
+        }
+
     }
 
     private void showBottomMenu() {
@@ -80,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             String Body = "Download QR Code Scanner App";
-            String Sub = "You can Scan any Bar code & QR code with this" + ". " + ". \nhttps://appgallery.huawei.com/#/app/C104816483";
+            String Sub = "You can Scan any Bar code & QR code with this" + ". " + ". \nhttps://play.google.com/store/apps/details?id=com.backdoor.qrcodescanner";
             intent.putExtra(Intent.EXTRA_SUBJECT, Body);
             intent.putExtra(Intent.EXTRA_TEXT, Sub);
             startActivity(Intent.createChooser(intent, "Share using"));
@@ -90,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void scanning(Bundle savedInstanceState) {
+        getCameraPermission();
         //1.get screen density to calculate viewfinder's rect
         DisplayMetrics dm = getResources().getDisplayMetrics();
         float density = dm.density;
